@@ -7,23 +7,21 @@
 ## 🇬🇧 English
 
 ### 📖 Description
-**JellyNamer** is a Python script for automatically renaming and organizing TV show episodes for **Jellyfin**, **Plex**, or **Emby**.  
+**JellyNamer** is a flexible Python script for automatically renaming and organizing TV show episodes for **Jellyfin**, **Plex**, or **Emby**.  
 
-It can also safely back up and restore all file and folder name changes using timestamped JSON backups.
-
-It was originally created to fix the chaotic and irregular season structure of *One Piece*, which Jellyfin couldn’t recognize correctly.  
-Manually fixing everything through the metadata manager was f**$!!..... — so this tool was born.  
+It can also safely back up and restore all file and folder name changes using timestamped JSON backups.  
+Originally created to solve the messy and inconsistent season structures of large shows, it now works for **any** series following a similar folder pattern.
 
 ---
 
 ### ⚙️ Features
-- 🧠 Auto-detects seasons and episodes from folder and file names  
+- 🧠 Automatically detects season and episode numbers from folder and file names  
 - 💾 Backup & restore system (JSON, timestamped)  
-- 🧪 Option to back up even in dry-run mode  
-- 🧩 Interactive setup (no need to edit code)  
-- 🧹 Optional trickplay deletion and folder renaming  
-- 💬 Clear configuration summary before execution  
-- 🧠 UTF-8 safe and cross-platform compatible  
+- 🧪 Option to create backups even during dry-run  
+- 🧩 Interactive setup — no need to edit the code  
+- 🧹 Optionally delete “trickplay” files or rename season folders  
+- 💬 Displays a full configuration summary before execution  
+- 🌍 UTF-8 compatible and works on Windows, macOS, and Linux  
 
 ---
 
@@ -34,7 +32,7 @@ python JellyNamer.py
 → Select option **2 (Restore)**  
 Then enter the path to your backup file:
 ```
-💾 Enter path to backup JSON file: W:\jellyfin\anime\One-Piece-Anime\JellyNamer_backup_2025-10-22_23-14-05.json
+💾 Enter path to backup JSON file: D:\Media\ShowName\JellyNamer_backup_2025-10-22_23-14-05.json
 ```
 ✅ JellyNamer will automatically restore all files and folders to their original names.
 
@@ -42,16 +40,16 @@ Example backup file (`.json`):
 ```json
 {
   "created": "2025-10-22T23:14:05",
-  "root": "W:\\jellyfin\\anime\\One-Piece-Anime",
+  "root": "D:\\Media\\ShowName",
   "files": [
     {
-      "old": "336.Chopperman.in.Aktion.HD.720P.x264.by.M3lloW.mp4",
-      "new": "OnePiece-S09E336-Chopperman in Aktion HD 720P x264 by M3lloW.mp4"
+      "old": "E336.Some.Episode.Name.mp4",
+      "new": "ShowName-S09E336-Some Episode Name.mp4"
     }
   ],
   "folders": [
     {
-      "old": "One.Piece.S09.E264-E336",
+      "old": "Show.S09.E264-E336",
       "new": "Season 09 (E264-E336)"
     }
   ]
@@ -60,25 +58,64 @@ Example backup file (`.json`):
 
 ---
 
+### 🧰 Installation
+1. Install [Python 3.9+](https://www.python.org/downloads/)  
+2. Clone or download this repository  
+3. Run the script:
+   ```bash
+   python JellyNamer.py
+   ```
+4. Follow the prompts — press **Enter** to use default values.
+
+---
+
+### 🧩 Options
+| Option | Description | Default |
+|---------|--------------|----------|
+| `DRY_RUN` | Preview only (no changes) | `True` |
+| `DELETE_TRICKPLAY` | Silently delete trickplay files | `False` |
+| `SHOW_TRICKPLAY` | Display trickplay files in console | `False` |
+| `RENAME_FOLDERS` | Rename season folders | `False` |
+| `BACKUP_IN_DRYRUN` | Create backups even during dry-run | `True` |
+
+---
+
+### 🧠 Technical Details
+- Uses regular expressions to detect season/episode ranges  
+- Cleans filenames (dots, underscores, numbering, etc.)  
+- Creates Jellyfin/Plex/Emby compatible file naming  
+- Stores backups as JSON files with timestamped names like:  
+  `JellyNamer_backup_2025-10-22_23-14-05.json`
+
+---
+
+### 📄 License
+MIT License © 2025  
+Created by [Your GitHub Name]  
+Originally inspired by complex metadata structures of long-running shows.  
+Free to use, modify, and share.
+
+---
+
 ## 🇩🇪 Deutsch
 
 ### 📖 Beschreibung
 **JellyNamer** ist ein flexibles Python-Skript zum automatischen **Umbenennen und Strukturieren von Serienepisoden** für **Jellyfin**, **Plex** oder **Emby**.  
 
-Zusätzlich kann es alle Änderungen mit einem **zeitgestempelten JSON-Backup** sichern und bei Bedarf vollständig wiederherstellen.
+Es kann außerdem alle Änderungen in einem **zeitgestempelten JSON-Backup** sichern und bei Bedarf vollständig wiederherstellen.  
+Ursprünglich entwickelt, um unregelmäßige Staffelstrukturen großer Serien zu korrigieren,  
+funktioniert es nun für **jede Serie**, die einem ähnlichen Ordneraufbau folgt.
 
-Es wurde ursprünglich entwickelt, um die chaotische und unregelmäßige Staffelstruktur von *One Piece* zu korrigieren, die Jellyfin nicht richtig erkennen konnte.  
-Alles manuell über den Metadaten-Manager zu korrigieren war f**$!! ... – also wurde dieses Tool entwickelt.  
 ---
 
 ### ⚙️ Funktionen
-- 🧠 Erkennt automatisch Staffeln und Episoden aus Ordner- und Dateinamen  
-- 💾 Backup- & Wiederherstellungssystem (JSON, mit Zeitstempel)  
+- 🧠 Erkennt automatisch Staffel- und Episodennummern aus Namen  
+- 💾 Backup- & Wiederherstellungssystem (JSON mit Zeitstempel)  
 - 🧪 Optionales Backup auch im Testmodus (Dry-Run)  
-- 🧩 Interaktive Abfragen – keine Codeänderungen nötig  
-- 🧹 Optionales Löschen von Trickplay-Dateien und Umbenennen von Staffelordnern  
-- 💬 Übersichtliche Konfigurationszusammenfassung vor der Ausführung  
-- 🧠 UTF-8-kompatibel und plattformübergreifend  
+- 🧩 Interaktive Benutzerführung – keine Codeänderungen nötig  
+- 🧹 Optionales Löschen von Trickplay-Dateien oder Umbenennen von Ordnern  
+- 💬 Übersichtliche Konfigurationsausgabe vor dem Start  
+- 🌍 UTF-8-kompatibel und plattformübergreifend
 
 ---
 
@@ -89,24 +126,24 @@ python JellyNamer.py
 → Option **2 (Restore)** wählen  
 Dann den Pfad zur Backup-Datei eingeben:
 ```
-💾 Pfad zur Backup-Datei: W:\jellyfin\anime\One-Piece-Anime\JellyNamer_backup_2025-10-22_23-14-05.json
+💾 Pfad zur Backup-Datei: D:\Media\ShowName\JellyNamer_backup_2025-10-22_23-14-05.json
 ```
 ✅ JellyNamer stellt automatisch alle ursprünglichen Datei- und Ordnernamen wieder her.
 
-Beispiel-Backupdatei (`.json`):
+Beispiel-Backup (`.json`):
 ```json
 {
   "created": "2025-10-22T23:14:05",
-  "root": "W:\\jellyfin\\anime\\One-Piece-Anime",
+  "root": "D:\\Media\\ShowName",
   "files": [
     {
-      "old": "336.Chopperman.in.Aktion.HD.720P.x264.by.M3lloW.mp4",
-      "new": "OnePiece-S09E336-Chopperman in Aktion HD 720P x264 by M3lloW.mp4"
+      "old": "E336.Some.Episode.Name.mp4",
+      "new": "ShowName-S09E336-Some Episode Name.mp4"
     }
   ],
   "folders": [
     {
-      "old": "One.Piece.S09.E264-E336",
+      "old": "Show.S09.E264-E336",
       "new": "Season 09 (E264-E336)"
     }
   ]
@@ -115,7 +152,8 @@ Beispiel-Backupdatei (`.json`):
 
 ---
 
-### 📄 License
+### 📄 Lizenz
 MIT License © 2025  
-Created by c13P70 
-Originally inspired by the *One Piece* metadata chaos.
+Erstellt von c13p70  
+Ursprünglich inspiriert durch das unübersichtliche Metadaten-Chaos langer Serien.  
+Frei verwendbar, anpassbar und erweiterbar.
