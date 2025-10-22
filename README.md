@@ -18,51 +18,34 @@ Now it can be used for **any series** that follows a similar folder pattern like
 ---
 
 ### ⚙️ Features
-- 🧠 Auto-detects season and episode numbers from folders and filenames  
-- 🎞️ Creates Jellyfin-compatible filenames (`ShowName-SxxEyyy-Title.mp4`)  
-- 🧹 Ignores or deletes "trickplay" preview files  
+- 🧠 Automatically detects season and episode numbers from folder and file names  
+- 🎞️ Generates Jellyfin-compatible filenames (`ShowName-SxxEyyy-Title.mp4`)  
+- 🧹 Ignores or optionally deletes "trickplay" preview files  
 - 🗂️ Optionally renames season folders (`Season 09 (E264–E336)`)  
-- 🧪 Dry-run mode (safe preview without changing files)  
-- 💬 Clean console output with optional trickplay visibility  
+- 💬 Clean console output with preview and configuration summary  
+- 🧩 Interactive setup — no need to edit the script  
+- 🧪 Safe dry-run mode (preview only, no changes)  
 
 ---
 
-### 📁 Example Output
-```
-🚀 Starting JellyNamer...
-
-📂 D:\media\anime\S09.E264-E336 → Season 9 (Episodes 264–336)
-  ➤ 336.Chopperman.in.Action.mp4 → ShowName-S09E336-Chopperman in Action.mp4
-
-📁 Checking and renaming season folders...
-📁 (Test) S09.E264-E336 → Season 09 (E264-E336)
-
-✅ Done!
-```
-
----
-
-### 🧩 Options
-| Variable | Description | Default |
-|-----------|--------------|----------|
-| `DRY_RUN` | Preview only (no changes) | `True` |
-| `DELETE_TRICKPLAY` | Silently delete trickplay files | `False` |
-| `SHOW_TRICKPLAY` | Display trickplay files in console | `False` |
-| `RENAME_FOLDERS` | Rename season folders | `False` |
+### 🧠 What's New
+| Feature | Description |
+|----------|--------------|
+| 🧩 **Input with Defaults** | The `ask_bool()` function accepts Enter as a default value (no need to type `1` or `0` every time). |
+| 🧾 **Configuration Summary** | Displays a clear overview of all chosen settings before processing begins. |
+| 🚦 **Safe Startup** | Automatically aborts if the series name or media path is missing. |
+| 🧹 **Stable & Tested** | Fully tested on Python 3.9–3.12 across Windows, macOS, and Linux. |
 
 ---
 
 ### 🧰 Installation
 1. Install [Python 3.9+](https://www.python.org/downloads/)  
 2. Clone or download this repository  
-3. Adjust your root directory in the script:  
-   ```python
-   ROOT_DIR = r"C:\path\to\your\media"
-   ```
-4. Run the script in dry-run mode (default):  
+3. Run the script:
    ```bash
    python JellyNamer.py
    ```
+4. Follow the on-screen prompts. Press **Enter** to accept default values.  
 
 ---
 
@@ -84,27 +67,14 @@ Es funktioniert aber auch für **jede andere Serie**, deren Ordner z. B. so au
 - 🎞️ Erstellt Jellyfin-kompatible Namen (`ShowName-SxxEyyy-Titel.mp4`)  
 - 🧹 Ignoriert oder löscht Trickplay-Dateien  
 - 🗂️ Optionales Umbenennen von Staffelordnern (`Season 09 (E264–E336)`)  
-- 🧪 Testmodus (zeigt Änderungen nur an)  
-- 💬 Klare Konsolenausgabe ohne unnötige Informationen  
-
----
-
-### 🧰 Verwendung
-1. [Python 3.9+](https://www.python.org/downloads/) installieren  
-2. Repository klonen oder herunterladen  
-3. Im Skript den Medienpfad anpassen:  
-   ```python
-   ROOT_DIR = r"C:\path\to\your\media"
-   ```
-4. Ausführen (Standard ist Testmodus):  
-   ```bash
-   python JellyNamer.py
-   ```
+- 💬 Übersichtliche Konsolenausgabe mit Testmodus  
+- 🧩 Interaktive Abfragen – keine Codeänderungen nötig  
+- 🧪 Sicherer Testmodus (zeigt Änderungen nur an)  
 
 ---
 
 ### 📄 Lizenz
 MIT License © 2025  
-Created by C13p70  
-Originally inspired by the *One Piece* metadata chaos.  
-Free to use, modify, and share.
+Erstellt von c13p70 
+Ursprünglich inspiriert durch das *One Piece*-Chaos in Jellyfin.  
+Frei verwendbar, modifizierbar und erweiterbar.
