@@ -12,6 +12,7 @@ Features:
  - JSON backup (with timestamp)
  - Restore from backup
  - File cleanup (.nfo, .jpg, .trickplay)
+ - Intelligent filename cleaning (removes duplicates, extensions, resolutions)
 """
 
 import os
@@ -26,11 +27,26 @@ EPISODE_PATTERN = re.compile(r"(\d{3,4})|E(\d{2,3})", re.IGNORECASE)
 
 
 def clean_title(name: str) -> str:
-    """Remove unnecessary characters and standardize titles."""
-    name = re.sub(r"(^\d+\.?|E\d+\.*)", "", name)
-    name = re.sub(r"(?i)one[ ._-]*piece", "", name)
+    """Cleans messy file titles before renaming."""
+    # remove episode and season markers
+    name = re.sub(r"S\d{1,3}", "", name)
+    name = re.sub(r"E\d{1,4}", "", name)
+
+    # remove codec/resolution tags
+    name = re.sub(r"\b(720p|1080p|2160p|x264|x265|hdr|webrip|bluray|hd|sd|4k)\b", "", name, flags=re.IGNORECASE)
+
+    # remove known duplicate extensions
+    name = re.sub(r"\.(mp4|mkv|avi|mov|wmv|flv|mpg)+$", "", name, flags=re.IGNORECASE)
+
+    # collapse dots, underscores, and multiple spaces
     name = re.sub(r"[._]+", " ", name)
+    name = re.sub(r"-{2,}", "-", name)
     name = re.sub(r"\s{2,}", " ", name)
+
+    # remove redundant words
+    name = re.sub(r"\b(sample|copy|part\d+|episode|ep)\b", "", name, flags=re.IGNORECASE)
+
+    # strip leftover junk and spaces
     return name.strip(" -_.")
 
 
@@ -121,7 +137,7 @@ def rename_files(root_dir, show_name, dry_run, delete_trickplay, show_trickplay,
                         print(f"[WARN] Could not delete trickplay: {e}")
                 continue
 
-            if not file.lower().endswith((".mp4", ".mkv", ".avi")):
+            if not file.lower().endswith((".mp4", ".mkv", ".avi", ".mov", ".wmv")):
                 continue
 
             ep_match = EPISODE_PATTERN.search(file)
@@ -137,6 +153,8 @@ def rename_files(root_dir, show_name, dry_run, delete_trickplay, show_trickplay,
                 header_printed = True
 
             title = clean_title(file)
+            title = re.sub(r"\.(mp4|mkv|avi|mov|wmv|flv|mpg)+$", "", title, flags=re.IGNORECASE)
+            title = re.sub(r"S\d{1,3}", "", title)
             new_filename = f"{show_name}-S{season:02d}E{ep_num:03d}-{title}.mp4"
             old_path = os.path.join(root, file)
             new_path = os.path.join(root, new_filename)
