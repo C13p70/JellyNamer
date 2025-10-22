@@ -105,6 +105,6 @@ Es funktioniert aber auch für **jede andere Serie**, deren Ordner z. B. so au
 
 ### 📄 Lizenz
 MIT License © 2025  
-Created by [Your GitHub Name]  
+Created by C13p70  
 Originally inspired by the *One Piece* metadata chaos.  
 Free to use, modify, and share.
