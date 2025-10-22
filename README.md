@@ -55,7 +55,7 @@ These deletions are **recorded in the backup JSON** under the `"deleted"` key.
 
 ### 📄 License
 MIT License © 2025  
-Created by [Your GitHub Name]  
+Created by c13p70  
 Free to use, modify, and share.
 
 ---
