@@ -7,45 +7,56 @@
 ## 🇬🇧 English
 
 ### 📖 Description
-**JellyNamer** is a powerful and flexible Python script for automatically renaming and organizing TV show episodes for **Jellyfin**, **Plex**, or **Emby**.  
+**JellyNamer** is a Python script for automatically renaming and organizing TV show episodes for **Jellyfin**, **Plex**, or **Emby**.  
+
+It can also safely back up and restore all file and folder name changes using timestamped JSON backups.
 
 It was originally created to fix the chaotic and irregular season structure of *One Piece*, which Jellyfin couldn’t recognize correctly.  
-Manually fixing everything through the metadata manager was too time-consuming — so this tool was born.  
-
-Now it can be used for **any series** that follows a similar folder pattern like:  
-`S09.E264-E336` → meaning *Season 9, Episodes 264–336.*
+Manually fixing everything through the metadata manager was f**$!!..... — so this tool was born.  
 
 ---
 
 ### ⚙️ Features
-- 🧠 Automatically detects season and episode numbers from folder and file names  
-- 🎞️ Generates Jellyfin-compatible filenames (`ShowName-SxxEyyy-Title.mp4`)  
-- 🧹 Ignores or optionally deletes "trickplay" preview files  
-- 🗂️ Optionally renames season folders (`Season 09 (E264–E336)`)  
-- 💬 Clean console output with preview and configuration summary  
-- 🧩 Interactive setup — no need to edit the script  
-- 🧪 Safe dry-run mode (preview only, no changes)  
+- 🧠 Auto-detects seasons and episodes from folder and file names  
+- 💾 Backup & restore system (JSON, timestamped)  
+- 🧪 Option to back up even in dry-run mode  
+- 🧩 Interactive setup (no need to edit code)  
+- 🧹 Optional trickplay deletion and folder renaming  
+- 💬 Clear configuration summary before execution  
+- 🧠 UTF-8 safe and cross-platform compatible  
 
 ---
 
-### 🧠 What's New
-| Feature | Description |
-|----------|--------------|
-| 🧩 **Input with Defaults** | The `ask_bool()` function accepts Enter as a default value (no need to type `1` or `0` every time). |
-| 🧾 **Configuration Summary** | Displays a clear overview of all chosen settings before processing begins. |
-| 🚦 **Safe Startup** | Automatically aborts if the series name or media path is missing. |
-| 🧹 **Stable & Tested** | Fully tested on Python 3.9–3.12 across Windows, macOS, and Linux. |
+### 🔄 Restore Example
+```bash
+python JellyNamer.py
+```
+→ Select option **2 (Restore)**  
+Then enter the path to your backup file:
+```
+💾 Enter path to backup JSON file: W:\jellyfin\anime\One-Piece-Anime\JellyNamer_backup_2025-10-22_23-14-05.json
+```
+✅ JellyNamer will automatically restore all files and folders to their original names.
 
----
-
-### 🧰 Installation
-1. Install [Python 3.9+](https://www.python.org/downloads/)  
-2. Clone or download this repository  
-3. Run the script:
-   ```bash
-   python JellyNamer.py
-   ```
-4. Follow the on-screen prompts. Press **Enter** to accept default values.  
+Example backup file (`.json`):
+```json
+{
+  "created": "2025-10-22T23:14:05",
+  "root": "W:\\jellyfin\\anime\\One-Piece-Anime",
+  "files": [
+    {
+      "old": "336.Chopperman.in.Aktion.HD.720P.x264.by.M3lloW.mp4",
+      "new": "OnePiece-S09E336-Chopperman in Aktion HD 720P x264 by M3lloW.mp4"
+    }
+  ],
+  "folders": [
+    {
+      "old": "One.Piece.S09.E264-E336",
+      "new": "Season 09 (E264-E336)"
+    }
+  ]
+}
+```
 
 ---
 
@@ -54,27 +65,57 @@ Now it can be used for **any series** that follows a similar folder pattern like
 ### 📖 Beschreibung
 **JellyNamer** ist ein flexibles Python-Skript zum automatischen **Umbenennen und Strukturieren von Serienepisoden** für **Jellyfin**, **Plex** oder **Emby**.  
 
-Es entstand ursprünglich, um die völlig unregelmäßigen Staffel- und Episodennamen von *One Piece* zu bereinigen.  
-Da Jellyfin diese Strukturen nicht korrekt erkennen konnte und die manuelle Anpassung im Metadaten-Manager extrem mühsam war, wurde dieses Skript entwickelt.  
+Zusätzlich kann es alle Änderungen mit einem **zeitgestempelten JSON-Backup** sichern und bei Bedarf vollständig wiederherstellen.
 
-Es funktioniert aber auch für **jede andere Serie**, deren Ordner z. B. so aussehen:  
-`S09.E264-E336` → Staffel 9, Episoden 264–336.
-
+Es wurde ursprünglich entwickelt, um die chaotische und unregelmäßige Staffelstruktur von *One Piece* zu korrigieren, die Jellyfin nicht richtig erkennen konnte.  
+Alles manuell über den Metadaten-Manager zu korrigieren war f**$!! ... – also wurde dieses Tool entwickelt.  
 ---
 
 ### ⚙️ Funktionen
-- 🧠 Automatische Staffel- und Episodenerkennung aus Ordner- und Dateinamen  
-- 🎞️ Erstellt Jellyfin-kompatible Namen (`ShowName-SxxEyyy-Titel.mp4`)  
-- 🧹 Ignoriert oder löscht Trickplay-Dateien  
-- 🗂️ Optionales Umbenennen von Staffelordnern (`Season 09 (E264–E336)`)  
-- 💬 Übersichtliche Konsolenausgabe mit Testmodus  
+- 🧠 Erkennt automatisch Staffeln und Episoden aus Ordner- und Dateinamen  
+- 💾 Backup- & Wiederherstellungssystem (JSON, mit Zeitstempel)  
+- 🧪 Optionales Backup auch im Testmodus (Dry-Run)  
 - 🧩 Interaktive Abfragen – keine Codeänderungen nötig  
-- 🧪 Sicherer Testmodus (zeigt Änderungen nur an)  
+- 🧹 Optionales Löschen von Trickplay-Dateien und Umbenennen von Staffelordnern  
+- 💬 Übersichtliche Konfigurationszusammenfassung vor der Ausführung  
+- 🧠 UTF-8-kompatibel und plattformübergreifend  
 
 ---
 
-### 📄 Lizenz
+### 🔄 Restore Beispiel
+```bash
+python JellyNamer.py
+```
+→ Option **2 (Restore)** wählen  
+Dann den Pfad zur Backup-Datei eingeben:
+```
+💾 Pfad zur Backup-Datei: W:\jellyfin\anime\One-Piece-Anime\JellyNamer_backup_2025-10-22_23-14-05.json
+```
+✅ JellyNamer stellt automatisch alle ursprünglichen Datei- und Ordnernamen wieder her.
+
+Beispiel-Backupdatei (`.json`):
+```json
+{
+  "created": "2025-10-22T23:14:05",
+  "root": "W:\\jellyfin\\anime\\One-Piece-Anime",
+  "files": [
+    {
+      "old": "336.Chopperman.in.Aktion.HD.720P.x264.by.M3lloW.mp4",
+      "new": "OnePiece-S09E336-Chopperman in Aktion HD 720P x264 by M3lloW.mp4"
+    }
+  ],
+  "folders": [
+    {
+      "old": "One.Piece.S09.E264-E336",
+      "new": "Season 09 (E264-E336)"
+    }
+  ]
+}
+```
+
+---
+
+### 📄 License
 MIT License © 2025  
-Erstellt von c13p70 
-Ursprünglich inspiriert durch das *One Piece*-Chaos in Jellyfin.  
-Frei verwendbar, modifizierbar und erweiterbar.
+Created by c13P70 
+Originally inspired by the *One Piece* metadata chaos.
