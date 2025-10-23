@@ -21,10 +21,12 @@ Manually fixing everything through the metadata manager was so f**$!... — so t
 - 🧠 Automatically detects season and episode numbers from folder and file names  
 - 💾 Backup & restore system (JSON, timestamped, includes deletions)  
 - 🧹 File cleanup for `.nfo`, `.jpg`, and `.trickplay` files  
+- 🔓 **Automatically unlocks write-protected `.trickplay` folders before deletion**  
 - 🧪 Dry-run mode (preview only)  
 - 🧩 Interactive setup (no code editing)  
 - 💬 Clear configuration summary before execution  
 - 🌍 UTF-8 compatible and cross-platform  
+- 💻 Works on Windows, Linux, and macOS  
 
 ---
 
@@ -53,9 +55,46 @@ These deletions are **recorded in the backup JSON** under the `"deleted"` key.
 
 ---
 
+### 🛠️ Error Handling Improvements
+- More specific exception handling (`PermissionError`, `OSError`)  
+- Automatically unlocks read-only `.trickplay` folders before deletion  
+- Graceful continuation even when access is denied  
+- No more broad “catch-all” exceptions — cleaner, safer, more stable  
+
+---
+
+### 🧾 Backup System
+Each rename or deletion is logged inside a timestamped JSON backup:
+```json
+{
+  "created": "2025-10-23T06:22:41",
+  "root": "W:/jellyfin/anime/One-Piece-Anime",
+  "files": [
+    {"old": "...", "new": "..."}
+  ],
+  "folders": [
+    {"old": "...", "new": "..."}
+  ],
+  "deleted": [
+    "W:/.../file_or_folder_removed"
+  ]
+}
+```
+You can restore all renames or deletions anytime using **mode 2** in the program menu.
+
+---
+
+### 🧠 Example Use
+```bash
+python JellyNamer.py
+```
+Then follow the interactive setup — no config file editing required.
+
+---
+
 ### 📄 License
 MIT License © 2025  
-Created by c13p70  
+Created by **c13p70**  
 Free to use, modify, and share.
 
 ---
@@ -68,8 +107,21 @@ Free to use, modify, and share.
 Es kann zudem alle Änderungen mit einem **zeitgestempelten JSON-Backup** sichern und bei Bedarf vollständig wiederherstellen.  
 Zusätzlich kann JellyNamer überflüssige `.nfo`, `.jpg` und `.trickplay`-Dateien automatisch bereinigen.
 
-s entstand ursprünglich, um die völlig unregelmäßigen Staffel- und Episodennamen von *One Piece* zu bereinigen.  
+Es entstand ursprünglich, um die völlig unregelmäßigen Staffel- und Episodennamen von *One Piece* zu bereinigen.  
 Da Jellyfin diese Strukturen nicht korrekt erkennen konnte und die manuelle Anpassung im Metadaten-Manager extrem f**$!..., wurde dieses Skript entwickelt.  
+
+---
+
+### ⚙️ Funktionen
+- 🧠 Automatische Erkennung von Staffel- und Episodennummern  
+- 💾 Backup & Restore-System (JSON, mit Zeitstempel, inklusive Löschungen)  
+- 🧹 Bereinigung von `.nfo`, `.jpg` und `.trickplay`-Dateien  
+- 🔓 **Automatische Entfernung des Schreibschutzes bei `.trickplay`-Ordnern**  
+- 🧪 Vorschau-Modus (Dry-Run)  
+- 🧩 Interaktive Einrichtung, kein Code-Editieren nötig  
+- 💬 Übersichtliche Zusammenfassung vor der Ausführung  
+- 🌍 UTF-8-kompatibel und plattformübergreifend  
+- 💻 Funktioniert unter Windows, Linux und macOS  
 
 ---
 
@@ -81,13 +133,23 @@ Diese Löschungen werden im Backup-JSON unter `"deleted"` gespeichert.
 |---------|---------------|-----------|
 | `DELETE_NFO` | Löscht `.nfo`-Metadaten-Dateien | `False` |
 | `DELETE_JPG` | Löscht `.jpg` / `-thumb.jpg` Vorschaubilder | `False` |
-| `DELETE_TRICKPLAY_FOLDERS` | Löscht `.trickplay`-Ordner (Vorschaubilder) | `False` |
+| `DELETE_TRICKPLAY_FOLDERS` | Löscht `.trickplay`-Ordner (Vorschaudaten) | `False` |
 
 🧪 Im **Dry-Run-Modus** werden alle Löschungen nur angezeigt, aber nicht ausgeführt.
 
 ---
 
+### 🧠 Verbesserte Fehlerbehandlung
+- Gezieltes Abfangen von Dateisystemfehlern (`PermissionError`, `OSError`)  
+- Automatische Aufhebung des Schreibschutzes vor dem Löschen von `.trickplay`-Ordnern  
+- Fortsetzung auch bei fehlenden Berechtigungen  
+- Kein Abbruch durch allgemeine Ausnahmen  
+
+---
+
 ### 📄 Lizenz
 MIT License © 2025  
-Erstellt von c13p70 
-Frei verwendbar,anpassbar und erweiterbar.
+Erstellt von **c13p70**  
+Frei verwendbar, anpassbar und erweiterbar.
+
+---
