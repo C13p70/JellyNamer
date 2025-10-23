@@ -90,4 +90,4 @@ Diese Löschungen werden im Backup-JSON unter `"deleted"` gespeichert.
 ### 📄 Lizenz
 MIT License © 2025  
 Erstellt von c13p70 
-Frei verwendbar, anpassbar und erweiterbar.
+Frei verwendbar,anpassbar und erweiterbar.
