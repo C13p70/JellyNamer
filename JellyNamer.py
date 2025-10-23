@@ -3,17 +3,6 @@
 🎬 JellyNamer - Smart Episode & Folder Renamer for Jellyfin, Plex & Emby
 Author: c13p70
 License: MIT (2025)
-
-Features:
- - Automatic rename of TV episodes (Jellyfin/Plex style)
- - Season folder detection (SxxExxx)
- - Interactive setup (no config editing)
- - Optional dry-run preview
- - JSON backup (with timestamp)
- - Restore from backup
- - File cleanup (.nfo, .jpg, .trickplay)
- - Intelligent filename cleaning (removes duplicates, extensions, resolutions)
- - UTF-8 support for special characters (ä, ö, ü, ß, etc.)
 """
 
 import os
@@ -54,6 +43,7 @@ def clean_title(name: str, show_name: str) -> str:
 
 
 def create_backup(backup_dir, data):
+    """Save backup JSON file with timestamp."""
     ts = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     backup_file = os.path.join(backup_dir, f"JellyNamer_backup_{ts}.json")
     with open(backup_file, "w", encoding="utf-8") as f:
@@ -63,6 +53,7 @@ def create_backup(backup_dir, data):
 
 
 def ask_bool(prompt, default):
+    """Ask user for yes/no input."""
     default_str = "1" if default else "0"
     val = input(f"{prompt} (1=True, 0=False, Enter={default_str}): ").strip()
     if val not in ["0", "1", ""]:
@@ -83,7 +74,7 @@ def unlock_folder(path):
                     try:
                         os.chmod(full_path, 0o777)
                     except Exception:
-                        pass
+                        continue
         return True
     except Exception as e:
         print(f"[WARN] Could not unlock folder {path}: {e}")
@@ -103,11 +94,12 @@ def delete_file(path, dry_run, backup_data):
             os.remove(path)
         backup_data["deleted"].append(path)
         print(f"[OK] Deleted: {path}")
-    except Exception as e:
+    except (PermissionError, OSError) as e:
         print(f"[WARN] Failed to delete {path}: {e}")
 
 
 def rename_folders(root_dir, dry_run, backup_data):
+    """Rename season folders to 'Season XX (E001-E061)'."""
     for root, dirs, _ in os.walk(root_dir):
         for d in dirs:
             match = FOLDER_PATTERN.search(d)
@@ -126,11 +118,12 @@ def rename_folders(root_dir, dry_run, backup_data):
                 try:
                     os.rename(old_path, new_path)
                     print(f"[OK] Folder renamed: {d} → {new_name}")
-                except Exception as e:
+                except OSError as e:
                     print(f"[WARN] Error renaming folder {d}: {e}")
 
 
 def rename_files(root_dir, show_name, dry_run, delete_trickplay, show_trickplay, backup_data):
+    """Rename episode files into Jellyfin/Plex/Emby format."""
     for root, _, files in os.walk(root_dir):
         folder_match = FOLDER_PATTERN.search(root)
         if not folder_match:
@@ -144,6 +137,7 @@ def rename_files(root_dir, show_name, dry_run, delete_trickplay, show_trickplay,
                 file = file.encode("latin-1").decode("utf-8")
             except (UnicodeEncodeError, UnicodeDecodeError):
                 file = file.encode("latin-1", errors="replace").decode("utf-8", errors="replace")
+
             if "trickplay" in file.lower():
                 if show_trickplay:
                     print(f"[INFO] Ignored trickplay: {file}")
@@ -151,9 +145,10 @@ def rename_files(root_dir, show_name, dry_run, delete_trickplay, show_trickplay,
                     try:
                         os.remove(os.path.join(root, file))
                         backup_data["deleted"].append(os.path.join(root, file))
-                    except Exception as e:
+                    except (PermissionError, OSError) as e:
                         print(f"[WARN] Could not delete trickplay: {e}")
                 continue
+
             if not file.lower().endswith((".mp4", ".mkv", ".avi", ".mov", ".wmv")):
                 continue
             ep_match = EPISODE_PATTERN.search(file)
@@ -178,11 +173,12 @@ def rename_files(root_dir, show_name, dry_run, delete_trickplay, show_trickplay,
                 try:
                     os.rename(old_path, new_path)
                     print(f"[OK] {file} → {new_filename}")
-                except Exception as e:
+                except OSError as e:
                     print(f"[WARN] Error renaming {file}: {e}")
 
 
 def cleanup_files(root_dir, opts, dry_run, backup_data):
+    """Handle cleanup of .nfo, .jpg, and .trickplay folders."""
     trickplay_dirs = []
     for root, dirs, files in os.walk(root_dir, topdown=False):
         if opts.get("DELETE_TRICKPLAY_FOLDERS", False):
@@ -204,6 +200,7 @@ def cleanup_files(root_dir, opts, dry_run, backup_data):
 
 
 def restore_from_backup(json_path):
+    """Restore files and folders from backup JSON."""
     if not os.path.exists(json_path):
         print("❌ Backup file not found.")
         return
@@ -216,14 +213,14 @@ def restore_from_backup(json_path):
             try:
                 os.rename(item["new"], item["old"])
                 restored += 1
-            except Exception as e:
+            except OSError as e:
                 print(f"[WARN] File restore failed: {e}")
     for item in data.get("folders", []):
         if os.path.exists(item["new"]):
             try:
                 os.rename(item["new"], item["old"])
                 restored += 1
-            except Exception as e:
+            except OSError as e:
                 print(f"[WARN] Folder restore failed: {e}")
     print(f"✅ Restored {restored} items.")
 
@@ -241,6 +238,7 @@ def main():
     elif mode != "1":
         print("⚠️ Invalid selection. Exiting.")
         return
+
     show_name = input("📺 Enter the show name (e.g., OnePiece, Naruto, etc.): ").strip()
     if not show_name:
         print("⚠️ No show name entered. Aborting.")
@@ -251,6 +249,7 @@ def main():
         return
     backup_dir = input("💾 Enter backup folder path (Enter for same as media folder): ").strip() or root_dir
     os.makedirs(backup_dir, exist_ok=True)
+
     backup_in_dryrun = ask_bool("💾 Create backup file before changes (also in dry-run)?", True)
     dry_run = ask_bool("🔧 Enable DRY_RUN (Preview only)?", True)
     delete_trickplay = ask_bool("🧹 Delete trickplay files?", False)
@@ -261,6 +260,7 @@ def main():
         "DELETE_JPG": ask_bool("🖼️  Delete .jpg or -thumb.jpg files?", False),
         "DELETE_TRICKPLAY_FOLDERS": ask_bool("🧹  Delete .trickplay folders?", False)
     }
+
     print("\n⚙️  Configuration Summary:")
     print(f"  Show Name: {show_name}")
     print(f"  Root Folder: {root_dir}")
@@ -272,6 +272,7 @@ def main():
     for k, v in opts.items():
         print(f"  {k}: {v}")
     print(f"  BACKUP_IN_DRYRUN: {backup_in_dryrun}\n")
+
     backup_data = {
         "created": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "root": root_dir,
@@ -279,6 +280,7 @@ def main():
         "folders": [],
         "deleted": []
     }
+
     cleanup_files(root_dir, opts, dry_run, backup_data)
     rename_files(root_dir, show_name, dry_run, delete_trickplay, show_trickplay, backup_data)
     if rename_folders_flag:
@@ -290,4 +292,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-2
